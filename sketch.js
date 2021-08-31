@@ -1,24 +1,27 @@
 
 // define the heart object
 let heart = {
-    baseY : -50,
-    baseX : 0,
-    circleDiam : 100,
-    circleRadius : 50,
+    baseY : -50, // y starting offset
+    baseX : 0, // x starting offset
+    circleDiam : 100, // diam 
+    circleRadius : 50, // should be half of diam, not the best design
     triangleHeight : 150,
-    triangleFudge : 8,
-    color : 0,
+    triangleFudge : 8, // so the top edges line up with the circles
+    color : 0, // in greyscale, 0 is black
   }
 
+// base scale used for transformation
 let currentScale = 1;
+
+// Timer since start of running, used for sine wave
 let timer = 0;
+// Sine wave settings
 let sineFrequency = 1/500;
 let sineAmplitude = 1/2;
 
 function setup() {
   // 400 px x 400px
-  createCanvas(400, 400);
-  
+  createCanvas(400, 400); 
 
   console.log(heart);
   
@@ -26,7 +29,20 @@ function setup() {
 
 function draw() {
   
-  background(220);
+  // make it get bigger and smaller
+  let y = sineAmplitude * sin(timer * sineFrequency);
+  console.log(timer + " " + y);
+
+  // lets make the background fancier
+
+  let rPhase =255/3;
+  let gPhase = 255 * 2/3;
+
+  let r = sineAmplitude * sin(timer * sineFrequency + rPhase);
+  let g = sineAmplitude * sin(timer * sineFrequency / 2 + gPhase);
+  let b = sineAmplitude * sin(timer * sineFrequency / 5);
+
+  background( r * 255 , g * 255, b * 255 );
 
   fill(heart.color);
 
@@ -36,12 +52,8 @@ function draw() {
   // timing 
   timer += deltaTime;
 
-  // make it get bigger and smaller
-  let y = sineAmplitude * sin(timer * sineFrequency);
-  console.log(timer + " " + y);
+
   scale(currentScale + y);
-
-
 
 // draw the heart, because it is using the base already, it should work with the
 // translate if we modify baseX and baseY values to compensate
