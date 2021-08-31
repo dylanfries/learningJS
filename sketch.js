@@ -1,11 +1,39 @@
+
+// define the heart object
+let heart = {
+    baseY : 150,
+    baseX : 200,
+    circleDiam : 100,
+    circleRadius : 50,
+    triangleHeight : 150,
+    triangleFudge : 8,
+    color : 0,
+  }
+
+
+
 function setup() {
-  createCanvas(255, 255); // Set canvas size to 255 by 255 pixels.
-  noStroke(); // Disable the drawing of outlines around shapes.
+  // 400 px x 400px
+  createCanvas(400, 400);
+  
+  console.log(heart);
+  
 }
 
 function draw() {
-  background(255, 10); // White background with an alpha transparency.
-  let oscillation = 127 * sin(frameCount / 100) + 128; // Sinusoidal transition from 1-ish to 255-ish.
-  fill(oscillation, 0, 255 - oscillation); // The fill color of the circle.
-  circle(mouseX, mouseY, oscillation); // Draw the circle at the current mouse position.
+  //background(220);
+
+  fill(heart.color);
+
+  circle(heart.baseX + heart.circleRadius, heart.baseY, heart.circleDiam);
+  circle(heart.baseX - heart.circleRadius, heart.baseY, heart.circleDiam);
+  triangle(heart.baseX + heart.circleDiam, heart.baseY + heart.triangleFudge,
+      heart.baseX - heart.circleDiam, heart.baseY + heart.triangleFudge,
+      heart.baseX, heart.baseY + heart.triangleHeight);
+
+/*
+  circle(150,150,100);
+  circle(250,150,100);
+  triangle(100,158, 300,158, 200, 300);
+*/
 }
