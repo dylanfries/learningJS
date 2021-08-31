@@ -49,11 +49,12 @@ function draw() {
 
   fill(heart.color);
 
-  //push();
+  push();
     // set the origin to the center. 
   translate(width/2, height/2);
   scale(currentScale + sineY);
-  //pop(); // ?? 
+
+ 
 
 // draw the heart, because it is using the base already, it should work with the
 // translate if we modify baseX and baseY values to compensate
@@ -62,7 +63,7 @@ function draw() {
   triangle(heart.baseX + heart.circleDiam, heart.baseY + heart.triangleFudge,
       heart.baseX - heart.circleDiam, heart.baseY + heart.triangleFudge,
       heart.baseX, heart.baseY + heart.triangleHeight);
-
+ pop(); // ?? 
 /* Original version
   circle(150,150,100);
   circle(250,150,100);
@@ -76,8 +77,9 @@ function draw() {
 
 
   // manually reverse the orientation settings
-  translate(-width/2, -height/2);
+  //translate(-width/2, -height/2);
   //scale(currentScale + sineY);// prbably fine
+  //scale(currentScale);
 
   // Not working yet but pretty cool anyways
   // map function
@@ -86,6 +88,7 @@ function draw() {
   let red = map(xPos, 0, width, 255);
   let green = map(yPos, 0, height, 255);
   fill(255, 0, 0);
+  ellipseMode(CENTER); // sets ellipses, arcs and circles to use the center position as a origin
   circle(xPos, yPos, sineY*circleSize);
 
 
