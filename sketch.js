@@ -1,16 +1,4 @@
-
-let player = {
-  xInput:0,
-  yInput:0,
-  xPos:200,
-  yPos:200,
-  xStart:200,
-  yStart:200,
-  rotationRads: 0,
-
-  xSpeed:1,
-  ySpeed:1,
-}
+let player;
 
 // base scale used for transformation
 let currentScale = 1;
@@ -30,7 +18,10 @@ let bgHearts = [];
 
 function setup() {
   // 400 px x 400px
-  createCanvas(400, 400); 
+  createCanvas(600, 400); 
+
+  // Player
+  player = new Player();
 
   // constructor(baseX, baseY, radius, triHeight, triFudge){
   h = new Heart(-50,0,50,150,8);
@@ -135,12 +126,13 @@ function draw() {
 
   // --- Background Heart --- 
   h.translate(2,1);
-  console.log(h.toString());
+  //console.log(h.toString());
   h.drawArt(); // Heart object
 
   h1.translate(1,3);
   h1.drawArt();
 
+  // lots of hearts
   for(let i = 0; i < bgHearts.length; i++){
     bgHearts[i].translate(1,3);
     bgHearts[i].drawArt();
@@ -148,23 +140,21 @@ function draw() {
   
   // --- Draw player cube ---
   // Update player movement. 
+  /*
   player.xPos += input.getXAxis() * player.xSpeed;
   player.yPos += input.getYAxis() * player.ySpeed * -1; // make Up go up in the window. 
+ */
+ // New Object based player input
+  input.update();
+  //console.log(input);
+  player.setInput(input.getXAxis(), input.getYAxis());
+  player.move();
+  console.log(player);
 
-  rectMode(CENTER); // rect origin centered. 
+  /* old replaced code
   fill(0,255,0); // green square
-
-  if(player.xPos < 0){
-    player.xPos = width;
-  }else if(player.xPos > width){
-    player.xPos = 0;
-  }
-
-  if(player.yPos < 0){
-    player.yPos = height;
-  }else if(player.yPos > height){
-    player.yPos = 0;
-  }
-
   rect(player.xPos, player.yPos, 25,25);
+  */
+  player.drawArt();
+
 }
