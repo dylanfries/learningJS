@@ -10,6 +10,19 @@ let heart = {
     color : 0, // in greyscale, 0 is black
   }
 
+let player = {
+  xInput:0,
+  yInput:0,
+  xPos:200,
+  yPos:200,
+  xStart:200,
+  yStart:200,
+  rotationRads: 0,
+
+  xSpeed:1,
+  ySpeed:1,
+}
+
 // base scale used for transformation
 let currentScale = 1;
 
@@ -34,7 +47,7 @@ function draw() {
 
   // make it get bigger and smaller
   let sineY = sineAmplitude * sin(timer * sineFrequency);
-  console.log(timer + " " + sineY);
+  //console.log(timer + " " + sineY);
 
   // lets make the background fancier
 
@@ -81,15 +94,89 @@ function draw() {
   //scale(currentScale + sineY);// prbably fine
   //scale(currentScale);
 
-  // Not working yet but pretty cool anyways
+  // Circle that follows the mouse
   // map function
   let circleSize = 50;
   // map 0-width to 0-255
-  let red = map(xPos, 0, width, 255);
-  let green = map(yPos, 0, height, 255);
+  let red = map(xPos, 0, width, 0, 255);
+  let green = map(yPos, 0, height, 0, 255);
   fill(255, 0, 0);
   ellipseMode(CENTER); // sets ellipses, arcs and circles to use the center position as a origin
-  circle(xPos, yPos, sineY*circleSize);
+  circle(xPos, yPos, sineY * circleSize);
 
 
+  // ---------- Keyboard input -----------
+  let xKeys = 0;
+  let yKeys = 0;
+  if( keyIsPressed){
+    if(keyIsDown(UP_ARROW)){
+      yKeys = 1;
+    }else if(keyIsDown(DOWN_ARROW)){
+      yKeys = -1;
+    }
+
+    if(keyCode === LEFT_ARROW){
+      xKeys = -1;
+    }else if(keyCode === RIGHT_ARROW){
+      xKeys = 1;
+    }
+  }
+  
+
+  console.log("x: " + xKeys + " y: " + yKeys);
+
+  // Update player movement. 
+  player.xPos += xKeys * player.xSpeed;
+  player.yPos += yKeys * player.ySpeed * -1; // make Up go up in the window. 
+
+  rectMode(CENTER); // rect origin centered. 
+  fill(0,255,0); // green
+
+  // wrap the player around to the other edge
+  if(player.xPos < 0){
+    player.xPos = width;
+  }else if(player.xPos > width){
+    player.xPos = 0;
+  }
+
+  if(player.yPos < 0){
+    player.yPos = height;
+  }else if(player.yPos > height){
+    player.yPos = 0;
+  }
+
+
+  rect(player.xPos, player.yPos, 25,25);
 }
+  // ---------- Keyboard input -----------
+  // on down 
+  /*
+function keyPressed(){
+  let xKeys = 0;
+  let yKeys = 0;
+
+  // pressed once
+  // note : i have 1 being down, which is not how I would usually do it. 
+  if(keyCode === UP_ARROW){
+    yKeys = 1;
+  }else if(keyCode === DOWN_ARROW){
+    yKeys = -1;
+  }
+
+  if(keyCode === LEFT_ARROW){
+    xKeys = -1;
+  }else if(keyCode === RIGHT_ARROW){
+    xKeys = 1;
+  }
+
+  console.log("x: " + xKeys + " y: " + yKeys);
+
+  // Update player movement. 
+  player.xPos += xKeys * player.xSpeed;
+  player.yPos += yKeys * player.ySpeed;
+
+  rectMode(CENTER); // rect origin centered. 
+  fill(0,255,0); // green
+  rect(player.xPos, player.yPos, 25,25);
+}
+*/
