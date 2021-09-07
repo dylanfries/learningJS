@@ -1,6 +1,5 @@
-
+// allows use to instantiate multiple instance of this object. 
 class Heart{
-
 
     constructor(){
         this.baseY = -50;
@@ -18,6 +17,7 @@ class Heart{
         return this.baseX + ","+ this.baseY;
     }
 
+    // Don't need function here. 
     drawArt() {
         push();
         fill(this.color);
@@ -34,6 +34,6 @@ class Heart{
             this.baseX - this.circleDiam, this.baseY + this.triangleFudge,
             this.baseX, this.baseY + this.triangleHeight);
         pop(); // ?? 
-      //  console.log("In art");
+     //   console.log("In art");
     }
 }

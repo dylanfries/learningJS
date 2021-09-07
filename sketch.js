@@ -1,5 +1,4 @@
 
-
 let player = {
   xInput:0,
   yInput:0,
@@ -24,6 +23,8 @@ let sineAmplitude = 1/2;
 
 let h;
 
+let input = null;
+
 function setup() {
   // 400 px x 400px
   createCanvas(400, 400); 
@@ -32,15 +33,63 @@ function setup() {
   console.log(h);
   console.log(h.toString());
   
-}
+  // Defining an input object for the keyboard axis
+  // similar but difference way then using the constructor based approach above. 
+  input = {
+    // no let for instance vars
+    xKeys : 0,
+    // also commas not ;
+    yKeys : 0,
+    
+    update: function(){
+      if( keyIsPressed){
+        if(keyIsDown(UP_ARROW)){
+          this.yKeys = 1;
+        }else if(keyIsDown(DOWN_ARROW)){
+          this.yKeys = -1;
+        }else{
+          this.yKeys = 0;
+        }
+
+        if(keyCode === LEFT_ARROW){
+          this.xKeys = -1;
+        }else if(keyCode === RIGHT_ARROW){
+          this.xKeys = 1;
+        }else{
+          this.xKeys = 0;
+        }
+      }
+    },// comma at the end. 
+
+    getXAxis: function(){
+      return this.xKeys;
+    },
+
+    getYAxis: function(){
+      return this.yKeys;
+    },
+
+    // returns the axis as a String in the format (x,y)
+    toString: function(){
+      return `(${this.xKeys},${this.yKeys})`;
+    },
+  }; // end of input object
+
+}// end function setup
 
 function draw() {
-  
 
+  // Update input object with current keyboard state
+  input.update();
+  // Keyboard Debugging. 
+  //console.log(input.toString());
+  //console.log("x: " + input.getXAxis() + " y: " + input.getYAxis());
 
   // timing, deltaTime is the time since the last frame or the inverse of the framerate 
   timer += deltaTime;
 
+  // -- sine wave for background --- 
+  // requires timer var
   // make it get bigger and smaller
   let sineY = sineAmplitude * sin(timer * sineFrequency);
   //console.log(timer + " " + sineY);
@@ -56,16 +105,10 @@ function draw() {
 
   background( r * 255 , g * 255, b * 255 );
 
-  // Input
+  // ---  Mouse Input --- 
   // https://stungeye.github.io/Applied-Math-For-Games-1/docs/04-introduction-to-processing/03-user-input.html
   let xPos = constrain(mouseX, 0, width);
   let yPos = constrain(mouseY, 0, height);
-
-
-  // manually reverse the orientation settings
-  //translate(-width/2, -height/2);
-  //scale(currentScale + sineY);// prbably fine
-  //scale(currentScale);
 
   // Circle that follows the mouse
   // map function
@@ -78,36 +121,19 @@ function draw() {
   circle(xPos, yPos, sineY * circleSize);
 
 
-  // ---------- Keyboard input -----------
-  let xKeys = 0;
-  let yKeys = 0;
-  if( keyIsPressed){
-    if(keyIsDown(UP_ARROW)){
-      yKeys = 1;
-    }else if(keyIsDown(DOWN_ARROW)){
-      yKeys = -1;
-    }
+  // --- Background --- 
+  h.drawArt(); // Heart object
 
-    if(keyCode === LEFT_ARROW){
-      xKeys = -1;
-    }else if(keyCode === RIGHT_ARROW){
-      xKeys = 1;
-    }
-  }
   
-
-  h.drawArt();
-
-
-  console.log("x: " + xKeys + " y: " + yKeys);
-
+  // --- Draw player cube ---
   // Update player movement. 
-  player.xPos += xKeys * player.xSpeed;
-  player.yPos += yKeys * player.ySpeed * -1; // make Up go up in the window. 
+  player.xPos += input.getXAxis() * player.xSpeed;
+  player.yPos += input.getYAxis() * player.ySpeed * -1; // make Up go up in the window. 
 
   rectMode(CENTER); // rect origin centered. 
-  fill(0,255,0); // green
+  fill(0,255,0); // green square
 
+  // --- Wrap Player ---
   // wrap the player around to the other edge
   if(player.xPos < 0){
     player.xPos = width;
@@ -121,41 +147,5 @@ function draw() {
     player.yPos = 0;
   }
 
-
-  rect(player.xPos, player.yPos, 25,25);
-
-
-
-}
-  // ---------- Keyboard input -----------
-  // on down 
-  /*
-function keyPressed(){
-  let xKeys = 0;
-  let yKeys = 0;
-
-  // pressed once
-  // note : i have 1 being down, which is not how I would usually do it. 
-  if(keyCode === UP_ARROW){
-    yKeys = 1;
-  }else if(keyCode === DOWN_ARROW){
-    yKeys = -1;
-  }
-
-  if(keyCode === LEFT_ARROW){
-    xKeys = -1;
-  }else if(keyCode === RIGHT_ARROW){
-    xKeys = 1;
-  }
-
-  console.log("x: " + xKeys + " y: " + yKeys);
-
-  // Update player movement. 
-  player.xPos += xKeys * player.xSpeed;
-  player.yPos += yKeys * player.ySpeed;
-
-  rectMode(CENTER); // rect origin centered. 
-  fill(0,255,0); // green
   rect(player.xPos, player.yPos, 25,25);
 }
-*/
