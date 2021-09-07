@@ -21,15 +21,27 @@ let timer = 0;
 let sineFrequency = 1/500;
 let sineAmplitude = 1/2;
 
-let h;
+
 
 let input = null;
+
+let h;
+let bgHearts = [];
 
 function setup() {
   // 400 px x 400px
   createCanvas(400, 400); 
 
-  h = new Heart();
+  // constructor(baseX, baseY, radius, triHeight, triFudge){
+  h = new Heart(-50,0,50,150,8);
+  h1 = new Heart(100, 50, 5, 15,1);
+
+  
+  for(let i =0 ; i < 10; i++){
+    bgHearts.push (new Heart(Math.random() * width, Math.random() * height, 5, 15,1));
+  }
+
+
   console.log(h);
   console.log(h.toString());
   
@@ -116,14 +128,23 @@ function draw() {
   // map 0-width to 0-255
   let red = map(xPos, 0, width, 0, 255);
   let green = map(yPos, 0, height, 0, 255);
+  
   fill(255, 0, 0);
   ellipseMode(CENTER); // sets ellipses, arcs and circles to use the center position as a origin
   circle(xPos, yPos, sineY * circleSize);
 
-
-  // --- Background --- 
+  // --- Background Heart --- 
+  h.translate(2,1);
+  console.log(h.toString());
   h.drawArt(); // Heart object
 
+  h1.translate(1,3);
+  h1.drawArt();
+
+  for(let i = 0; i < bgHearts.length; i++){
+    bgHearts[i].translate(1,3);
+    bgHearts[i].drawArt();
+  }
   
   // --- Draw player cube ---
   // Update player movement. 
@@ -133,8 +154,6 @@ function draw() {
   rectMode(CENTER); // rect origin centered. 
   fill(0,255,0); // green square
 
-  // --- Wrap Player ---
-  // wrap the player around to the other edge
   if(player.xPos < 0){
     player.xPos = width;
   }else if(player.xPos > width){
