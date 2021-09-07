@@ -1,14 +1,4 @@
 
-// define the heart object
-let heart = {
-    baseY : -50, // y starting offset
-    baseX : 0, // x starting offset
-    circleDiam : 100, // diam 
-    circleRadius : 50, // should be half of diam, not the best design
-    triangleHeight : 150,
-    triangleFudge : 8, // so the top edges line up with the circles
-    color : 0, // in greyscale, 0 is black
-  }
 
 let player = {
   xInput:0,
@@ -32,16 +22,22 @@ let timer = 0;
 let sineFrequency = 1/500;
 let sineAmplitude = 1/2;
 
+let h;
+
 function setup() {
   // 400 px x 400px
   createCanvas(400, 400); 
 
-  console.log(heart);
+  h = new Heart();
+  console.log(h);
+  console.log(h.toString());
   
 }
 
 function draw() {
   
+
+
   // timing, deltaTime is the time since the last frame or the inverse of the framerate 
   timer += deltaTime;
 
@@ -60,29 +56,6 @@ function draw() {
 
   background( r * 255 , g * 255, b * 255 );
 
-  fill(heart.color);
-
-  push();
-    // set the origin to the center. 
-  translate(width/2, height/2);
-  scale(currentScale + sineY);
-
- 
-
-// draw the heart, because it is using the base already, it should work with the
-// translate if we modify baseX and baseY values to compensate
-  circle(heart.baseX + heart.circleRadius, heart.baseY, heart.circleDiam);
-  circle(heart.baseX - heart.circleRadius, heart.baseY, heart.circleDiam);
-  triangle(heart.baseX + heart.circleDiam, heart.baseY + heart.triangleFudge,
-      heart.baseX - heart.circleDiam, heart.baseY + heart.triangleFudge,
-      heart.baseX, heart.baseY + heart.triangleHeight);
- pop(); // ?? 
-/* Original version
-  circle(150,150,100);
-  circle(250,150,100);
-  triangle(100,158, 300,158, 200, 300);
-*/
-  
   // Input
   // https://stungeye.github.io/Applied-Math-For-Games-1/docs/04-introduction-to-processing/03-user-input.html
   let xPos = constrain(mouseX, 0, width);
@@ -123,6 +96,9 @@ function draw() {
   }
   
 
+  h.drawArt();
+
+
   console.log("x: " + xKeys + " y: " + yKeys);
 
   // Update player movement. 
@@ -147,6 +123,9 @@ function draw() {
 
 
   rect(player.xPos, player.yPos, 25,25);
+
+
+
 }
   // ---------- Keyboard input -----------
   // on down 
