@@ -1,3 +1,5 @@
+// Art Credit https://itch.io/queue/c/292705/free-asset-packs?game_id=436829
+
 let player;
 
 // base scale used for transformation
@@ -15,7 +17,24 @@ let h;
 let bgHearts = [];
 let ui = null;
 
+let knight = null;
+let knightImage = null;
+
+function preload(){
+  // Note: need to wait for the image to be loaded, could use setup (is it guaranteed loaded?) or a callback
+  knightImage = loadImage("assets/heroes/knight/knight_idle_anim_f0.png");
+  knight.initialize();
+}
+
 function setup() {
+
+  knight = new NPC(knightImage,
+      width/2, height/2, 2);
+
+  // if I call this immediately it might not be loaded yet
+  //knight.resize(knight.width*2,knight.height *2);
+
+
   // 400 px x 400px
   createCanvas(600, 400); 
 
@@ -27,15 +46,12 @@ function setup() {
   h = new Heart(-50,0,50,150,8);
   //h1 = new Heart(100, 50, 5, 15,1);
 
-  
-  for(let i =0 ; i < 10; i++){
-    bgHearts.push (new Heart(Math.random() * width, Math.random() * height, 5, 15,1));
-  }
-
-
   //console.log(h);
   //console.log(h.toString());
-  
+
+// Load the first stage
+  initLevel1();
+
   // Defining an input object for the keyboard axis
   // similar but difference way then using the constructor based approach above. 
   input = {
@@ -85,6 +101,7 @@ function setup() {
 
 function draw() {
 
+  
   // Update input object with current keyboard state
   input.update();
   // Keyboard Debugging. 
@@ -94,6 +111,7 @@ function draw() {
   // timing, deltaTime is the time since the last frame or the inverse of the framerate 
   timer += deltaTime;
 
+  // ----- BACKGROUND -----
   // -- sine wave for background --- 
   // requires timer var
   // make it get bigger and smaller
@@ -101,7 +119,6 @@ function draw() {
   //console.log(timer + " " + sineY);
 
   // lets make the background fancier
-
   let rPhase =255/3;
   let gPhase = 255 * 2/3;
 
@@ -126,6 +143,11 @@ function draw() {
   fill(255, 0, 0);
   ellipseMode(CENTER); // sets ellipses, arcs and circles to use the center position as a origin
   circle(xPos, yPos, sineY * circleSize);
+
+  // Knight Sprite
+  
+  console.log(knight);
+  knight.drawArt();
 
   // --- Background Heart --- 
   h.translate(2,1);
@@ -185,4 +207,15 @@ function gameOver(){
   fill(255,0,0);
   text("Game Over - You Win!", width/2, height * 1/3);
   pop();
+}
+
+function initLevel1(){
+  for(let i =0 ; i < 10; i++){
+    bgHearts.push (new Heart(Math.random() * width, Math.random() * height, 5, 15,1));
+  }
+
+}
+
+function initLevel2(){
+
 }
