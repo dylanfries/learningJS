@@ -43,7 +43,7 @@ class Heart{
     setPosition(x,y){
         this.baseX = x;
         this.baseY = y;
-        canvasWrap(); // on by default, could have a toggle.
+        this.canvasWrap(); // on by default, could have a toggle.
     }
 
     translate(x, y){

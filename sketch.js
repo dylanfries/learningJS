@@ -13,6 +13,7 @@ let input = null;
 
 let h;
 let bgHearts = [];
+let ui = null;
 
 function setup() {
   // 400 px x 400px
@@ -20,10 +21,11 @@ function setup() {
 
   // Player
   player = new Player();
+  ui = new UI();
 
   // constructor(baseX, baseY, radius, triHeight, triFudge){
   h = new Heart(-50,0,50,150,8);
-  h1 = new Heart(100, 50, 5, 15,1);
+  //h1 = new Heart(100, 50, 5, 15,1);
 
   
   for(let i =0 ; i < 10; i++){
@@ -31,8 +33,8 @@ function setup() {
   }
 
 
-  console.log(h);
-  console.log(h.toString());
+  //console.log(h);
+  //console.log(h.toString());
   
   // Defining an input object for the keyboard axis
   // similar but difference way then using the constructor based approach above. 
@@ -130,9 +132,10 @@ function draw() {
   //console.log(h.toString());
   h.drawArt(); // Heart object
 
+/*
   h1.translate(1,3);
   h1.drawArt();
-
+*/
   // lots of hearts
   for(let i = 0; i < bgHearts.length; i++){
     bgHearts[i].translate(1,3);
@@ -142,11 +145,17 @@ function draw() {
         && player.collision(bgHearts[i].getXAxis(), 
               bgHearts[i].getYAxis(), bgHearts[i].getRadius())){
       bgHearts[i].explode(); // start explosion
+    // add heart to ui
+      ui.addHeart();
     }
   }
 
   // remap the array without the destroyed elements
   bgHearts = bgHearts.filter((heart) => !heart.isDestroyed);
+
+  if(bgHearts.length === 0){
+    gameOver();
+  }
 
   // --- Draw player cube ---
   // Update player movement. 
@@ -166,5 +175,14 @@ function draw() {
   rect(player.xPos, player.yPos, 25,25);
   */
   player.drawArt();
+  ui.drawArt();
+}
 
+function gameOver(){
+  push();
+  textSize(36);
+  textAlign(CENTER);
+  fill(255,0,0);
+  text("Game Over - You Win!", width/2, height * 1/3);
+  pop();
 }

@@ -6,7 +6,7 @@ class Player{
   		this.yPos=200;
   		this.rotationRads= 0;
   		this.xSpeed=2;
-  		this.ySpeed=2;
+  		this.ySpeed=1;
   		this.radius = 25;
 	}
 
