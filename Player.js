@@ -5,8 +5,9 @@ class Player{
   		this.xPos=200;
   		this.yPos=200;
   		this.rotationRads= 0;
-  		this.xSpeed=1;
-  		this.ySpeed=1;
+  		this.xSpeed=2;
+  		this.ySpeed=2;
+  		this.radius = 25;
 	}
 
 	setInput(x,y){
@@ -53,7 +54,20 @@ class Player{
 		fill(0,255,0);
 		// Size
 		// reverse since input is up and canvas is down
-		rect(this.xPos, this.yPos , 25, 25);
+		rect(this.xPos, this.yPos , this.radius, this.radius);
 		pop();
+	}
+
+	// if the player is closer then distance + radius, it is a hit, return true, else false
+	collision(x, y, otherRadius){
+		// pyth
+
+		// or distance
+		let distance = dist(this.xPos, this.yPos, x, y);
+		if(distance < this.radius + otherRadius){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

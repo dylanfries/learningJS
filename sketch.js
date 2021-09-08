@@ -9,8 +9,6 @@ let timer = 0;
 let sineFrequency = 1/500;
 let sineAmplitude = 1/2;
 
-
-
 let input = null;
 
 let h;
@@ -61,6 +59,9 @@ function setup() {
         }else{
           this.xKeys = 0;
         }
+      }else{
+        this.xKeys = 0;
+        this.yKeys = 0;
       }
     },// comma at the end. 
 
@@ -136,8 +137,17 @@ function draw() {
   for(let i = 0; i < bgHearts.length; i++){
     bgHearts[i].translate(1,3);
     bgHearts[i].drawArt();
+
+    if(!bgHearts[i].isExplodingNow() && !bgHearts[i].isDestroyedNow() 
+        && player.collision(bgHearts[i].getXAxis(), 
+              bgHearts[i].getYAxis(), bgHearts[i].getRadius())){
+      bgHearts[i].explode(); // start explosion
+    }
   }
-  
+
+  // remap the array without the destroyed elements
+  bgHearts = bgHearts.filter((heart) => !heart.isDestroyed);
+
   // --- Draw player cube ---
   // Update player movement. 
   /*
@@ -149,7 +159,7 @@ function draw() {
   //console.log(input);
   player.setInput(input.getXAxis(), input.getYAxis());
   player.move();
-  console.log(player);
+  //console.log(player);
 
   /* old replaced code
   fill(0,255,0); // green square

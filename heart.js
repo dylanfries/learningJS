@@ -22,7 +22,22 @@ class Heart{
         this.triangleFudge = triFudge;
         this.color = 0; // greyscale color
         console.log("Heart Created at: " + this.baseX + " " + this.baseY )
+        this.isExploding = false;
+        this.explodeTimerCurrent = 30;
+        this.isDestroyed = false;
+        this.currentScale = 1;
+    }
 
+    getXAxis(){
+        return this.baseX;
+    }
+
+    getYAxis(){
+        return this.baseY;
+    }
+
+    getRadius(){
+        return this.circleRadius
     }
 
     setPosition(x,y){
@@ -63,18 +78,55 @@ class Heart{
         push();
         fill(this.color);
         // set the origin to the center. 
-        //translate(width/2, height/2);
-        scale(currentScale);
-        // add sine wave scaling
 
+        // are we currently exploding?
+        if(this.isExploding){
+            this.explodeTimerCurrent--;
+            if(this.explodeTimerCurrent < 1){
+                this.isExploding = false;
+                this.destroySelf();
+                return;
+            }else{
+               this.currentScale *= 1.1; 
+               console.log(this.currentScale);
+            }
+        }
+
+        //translate(width/2, height/2);
+
+        //imageMode(CENTER);
+
+        translate(this.baseX, this.baseY);
+        scale(this.currentScale);
+        // add sine wave scaling
+        
         // draw the heart, because it is using the base already, it should work with the
         // translate if we modify baseX and baseY values to compensate
-        circle(this.baseX + this.circleRadius, this.baseY, this.circleDiam);
-        circle(this.baseX - this.circleRadius, this.baseY, this.circleDiam);
-        triangle(this.baseX + this.circleDiam, this.baseY + this.triangleFudge,
-            this.baseX - this.circleDiam, this.baseY + this.triangleFudge,
-            this.baseX, this.baseY + this.triangleHeight);
-        pop(); // ?? 
-     //   console.log("In art");
+        // if we are setting the translate of the canvas to the base, we can remove it?
+        // this is a little strange but much simpler. 
+        circle(this.circleRadius, 0, this.circleDiam);
+        circle(-this.circleRadius, 0, this.circleDiam);
+        triangle(this.circleDiam, this.triangleFudge,
+            -this.circleDiam, this.triangleFudge,
+            0, this.triangleHeight);
+        
+        pop(); // need to undo settings (translate, scale, fill etc)
+
+    }
+
+    explode(){
+        this.isExploding = true;
+    }
+
+    isExplodingNow(){
+        return this.isExploding;
+    }
+
+    destroySelf(){
+        this.isDestroyed = true;
+    }
+
+    isDestroyedNow(){
+        return this.isDestroyed;
     }
 }
