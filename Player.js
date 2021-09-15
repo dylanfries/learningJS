@@ -3,11 +3,20 @@ class Player{
 		// Control Variables
 		this.rotationSpeed = 3;
   		this.speed=1;
+  		this.currentSpeed = 0;
+  		this.maxVelocity = 3;
 
 		// Input
 		this.inputVector = createVector(0,0);//new PVector(0,0);
+		//this.mappedInputScalar = 0 ; // 0-1;
 
 		// position
+		this.velocity = createVector(0,0);
+		this.acceleration = createVector(0,0);
+		this.accelerationSmoothing = .1; // accel delta
+		//this.thrustForce = 0;
+		//this.totalForces = createVector(0,0);
+
   		this.position = createVector(200,200);//new PVector(200,200);
 
   		// Rotation
@@ -25,6 +34,7 @@ class Player{
 
 	setInput(x,y){
 		this.inputVector.set(x,y);
+		//this.mappedInputScalar = map(this.inputVector.y, -1,1, 0,1);
 	}
 
 	setPosition(x,y){
@@ -34,6 +44,7 @@ class Player{
 
 	// includes multiply by speed and takes in Input
 	move(){
+		// Rotation Calculations
 		// include rotation
 		this.rotationAngle += this.rotationSpeed * this.inputVector.x;
 		// convert to rads
@@ -48,24 +59,49 @@ class Player{
 
 		//rotate(this.rotationRads);
 		// careful, regular "translate() is a p5 method"
-		// this one resets the canvas to the current position
+		// this one resets the canvas to the current position, not the same as Unity Translate
 		translate(this.position.x, this.position.y);
 
-		// Rotation Calculations
+		// Acceleration from input
+		// mappedInputScalar // input 0-1
+
+		
 		//angleMode(DEGREES);
 		// calculate the future step
 		let xOffset = cos(this.rotationAngle) * this.speed;
 		let yOffset = sin(this.rotationAngle) * this.speed;
-		// draw a line for debugging
-		line(0, 0, xOffset * 23, yOffset * 23); // negative because the canvas Y gets bigger as you go down
 
+		this.acceleration.set(xOffset, yOffset); 
+		this.acceleration.mult(this.inputVector.y); // use speed as max and map to input
+		// [ ] apply a delta to smooth acceleration here
+
+		fill(0,125,0);
+		line(0,0,this.acceleration.x * 25, this.acceleration.y * 25);
+
+		this.acceleration.mult(this.accelerationSmoothing);
+		// Base Velocity? Currently
+		//this.velocity.set(0,0); // don't want to stop each frame
+		this.velocity.add(this.acceleration); // add in the accel
+
+		this.velocity.limit(this.maxVelocity);
+
+		fill(0,0,0);
+		// draw a line for current velocity
+		line(0, 0, this.velocity.x * 25, this.velocity.y * 25); // negative because the canvas Y gets bigger as you go down
+/*
 		// Update the position
 		this.position.x += xOffset;
 		this.position.y += yOffset;
+*/
+		this.position.add(this.velocity);
 
 		this.canvasWrap();
 
 		pop();	
+
+
+		// Debugging: 
+		text("velocity:" + round(this.velocity.x,2) + ", " + round(this.velocity.y,2), 10,10 );
 	}
 
 	canvasWrap(){
