@@ -146,7 +146,7 @@ function draw() {
 
   // Knight Sprite
   
-  console.log(knight);
+  //console.log(knight);
   knight.drawArt();
 
   // --- Background Heart --- 
@@ -190,7 +190,7 @@ function draw() {
   //console.log(input);
   player.setInput(input.getXAxis(), input.getYAxis());
   player.move();
-  //console.log(player);
+  console.log(player);
 
   /* old replaced code
   fill(0,255,0); // green square
