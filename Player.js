@@ -1,13 +1,20 @@
 class Player{
 	constructor(){
-		this.xInput=0;
-  		this.yInput=0;
-  		this.xPos=200;
-  		this.yPos=200;
+		// Control Variables
+		this.rotationSpeed = 3;
+  		this.speed=1;
+
+		// Input
+		this.inputVector = createVector(0,0);//new PVector(0,0);
+
+		// position
+  		this.position = createVector(200,200);//new PVector(200,200);
+
+  		// Rotation
   		this.rotationAngle =0;
   		this.rotationRads= 0;
-  		this.rotationSpeed = 3;
-  		this.speed=1;
+
+  		// Collision Radius
   		this.radius = 25;
 
   		// Art
@@ -17,29 +24,18 @@ class Player{
 	}
 
 	setInput(x,y){
-		this.xInput = x;
-		this.yInput = y; // reverse for canvas
+		this.inputVector.set(x,y);
 	}
 
 	setPosition(x,y){
-		this.xPos = x;
-		this.yPos = y;
+		this.position.set(x,y);
 		canvasWrap();
 	}
 
-	/*
-	// private
-	myTranslate(x,y){
-		this.xPos += x;
-		this.yPos += y;
-		console.log(this.xPos + " " + this.yPos)
-		this.canvasWrap();
-	}
-*/
 	// includes multiply by speed and takes in Input
 	move(){
 		// include rotation
-		this.rotationAngle += this.rotationSpeed * this.xInput;
+		this.rotationAngle += this.rotationSpeed * this.inputVector.x;
 		// convert to rads
 		this.rotationRads = 2 * PI * (this.rotationAngle/360.0);
 
@@ -53,7 +49,7 @@ class Player{
 		//rotate(this.rotationRads);
 		// careful, regular "translate() is a p5 method"
 		// this one resets the canvas to the current position
-		translate(this.xPos, this.yPos);
+		translate(this.position.x, this.position.y);
 
 		// Rotation Calculations
 		//angleMode(DEGREES);
@@ -64,8 +60,8 @@ class Player{
 		line(0, 0, xOffset * 23, yOffset * 23); // negative because the canvas Y gets bigger as you go down
 
 		// Update the position
-		this.xPos += xOffset;
-		this.yPos += yOffset;
+		this.position.x += xOffset;
+		this.position.y += yOffset;
 
 		this.canvasWrap();
 
@@ -73,16 +69,16 @@ class Player{
 	}
 
 	canvasWrap(){
-		if(this.xPos < 0){
-			this.xPos = width;
-		}else if(this.xPos > width){
-			this.xPos = 0;
+		if(this.position.x < 0){
+			this.position.x = width;
+		}else if(this.position.x > width){
+			this.position.x = 0;
 		}
 
-		if(this.yPos < 0){
-			this.yPos = height;
-		}else if(this.yPos > height){
-			this.yPos = 0;
+		if(this.position.y < 0){
+			this.position.y = height;
+		}else if(this.position.y > height){
+			this.position.y = 0;
 		}
 		//console.log("canvasWrap");
 	}
@@ -91,22 +87,22 @@ class Player{
 		push();
 		rectMode(CENTER); // rect origin centered. 
 		fill(0,255,0);
-		translate(this.xPos, this.yPos); // set origin of canvas
+		translate(this.position.x, this.position.y); // set origin of canvas
 		angleMode(DEGREES);
 		// Triangle starts pointing up but 0 degrees rotated is pointing right. 
 		rotate(90); // to point to the right 
 		rotate(this.rotationAngle);
 		// Size
 		// reverse since input is up and canvas is down
-		//rect(this.xPos, this.yPos , this.radius, this.radius);
+		//rect(this.position.x, this.position.y , this.radius, this.radius);
 		triangle(0, -this.noseLength, 
 				this.wingSpan, this.tailLength, 
 				-this.wingSpan, this.tailLength);
 
 		/* Tried this first but since I added the translate, I don't need to offset anymore
-triangle(this.xPos, this.yPos - this.noseLength, 
-				this.xPos + this.wingSpan, this.yPos + this.tailLength, 
-				this.xPos - this.wingSpan, this.yPos + this.tailLength);
+triangle(this.position.x, this.position.y - this.noseLength, 
+				this.position.x + this.wingSpan, this.position.y + this.tailLength, 
+				this.position.x - this.wingSpan, this.position.y + this.tailLength);
 				*/
 
 		// pivot point
@@ -121,7 +117,7 @@ triangle(this.xPos, this.yPos - this.noseLength,
 		// pyth
 
 		// or distance
-		let distance = dist(this.xPos, this.yPos, x, y);
+		let distance = dist(this.position.x, this.position.y, x, y);
 		if(distance < this.radius + otherRadius){
 			return true;
 		}else{
